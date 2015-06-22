@@ -24,7 +24,7 @@ void ServerApp::Initialize() {
 
     Host host;
     host.SetFamily(AF_INET);
-    host.SetIp("192.168.1.101");
+    host.SetIp("127.0.0.1");
     host.SetPort(20001);
 
     auto socketCL = new ClientSocketCL();

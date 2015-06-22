@@ -6,7 +6,7 @@ void ServerSocketCL::DerivedReset() {
     m_packeter.SetValidPacketCallback([this](int command, const void* data, int length) {
         this->m_packeter.SendData(command, data, length);
 
-        static std::atomic<int> count = 0;
+        static std::atomic<int> count{ 0 };
         if (++count % 10 == 0) {
             ::printf("ClientSocket OnValidPacket %p %d\n", data, length);
         }
