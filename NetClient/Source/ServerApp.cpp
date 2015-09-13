@@ -19,9 +19,6 @@ void ServerApp::Initialize() {
 
     m_networkService.Initialize(1024, 8);
 
-    ::memset(m_sockets, 0, sizeof(m_sockets));
-    m_socketArray.Attach(m_sockets, 1024, 0);
-
     Host host;
     host.SetFamily(AF_INET);
     host.SetIp("127.0.0.1");
@@ -33,11 +30,10 @@ void ServerApp::Initialize() {
     socketCL->m_connecter.SetRemoteHost(host);
     socketCL->m_connecter.SetReconnectInterval(10000);
     socketCL->m_connecter.Connect();
-    m_networkService.Attach(socketCL);
+    m_networkService.Manage(socketCL);
 }
 
 void ServerApp::Finalize() {
-    m_socketArray.Detach();
     m_networkService.Finalize();
     Network::Cleanup();
 
@@ -45,15 +41,5 @@ void ServerApp::Finalize() {
 }
 
 void ServerApp::Tick() {
-    const auto size = m_networkService.AcquireSockets([](Socket* socket) {
-            return socket->GetType() != SOCKET_TCP_LISTEN;
-        }, m_socketArray);
-
-    for (auto i = 0; i < size; ++i) {
-        auto socket = m_socketArray[i];
-        MZ_ASSERT_TRUE(!NS_MZ::IsNull(socket));
-        socket->Dispatch();
-    }
-
-    m_networkService.ReleaseSockets(m_socketArray);
+    m_networkService.Tick();
 }

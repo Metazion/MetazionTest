@@ -18,8 +18,6 @@ public:
 
 private:
     NS_MZ_NET::NetworkService m_networkService;
-    NS_MZ_NET::NetworkService::SocketArray_t m_socketArray;
-    NS_MZ_NET::Socket* m_sockets[1024];
 };
 
 extern ServerApp* g_serverApp;
